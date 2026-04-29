@@ -1,0 +1,8 @@
+com\fraudsense\controller\HealthController$HealthResponse.class
+com\fraudsense\service\KafkaProducerService.class
+com\fraudsense\model\Transaction.class
+com\fraudsense\service\WebhookService.class
+com\fraudsense\FraudSenseApplication.class
+com\fraudsense\controller\HealthController.class
+com\fraudsense\controller\WebhookController.class
+com\fraudsense\service\KafkaConsumerService.class
