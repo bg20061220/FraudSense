@@ -7,7 +7,8 @@ public class Transaction {
     private String customerId;
     private String status;
     private long timestamp;
-
+    
+    public Transaction() {} ; 
     public Transaction(String id, long amount, String currency, String customerId, String status, long timestamp) {
         this.id = id;
         this.amount = amount;
