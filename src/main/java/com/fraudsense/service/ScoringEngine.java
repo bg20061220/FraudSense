@@ -4,24 +4,33 @@ import com.fraudsense.model.Transaction;
 import com.fraudsense.model.ScoredTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 
 @Service
 public class ScoringEngine {
-    private static final Logger log = LoggerFactory.getLogger(ScoringEngine.class) ; 
-    private static final long VELOCITY_WINDOW_MS = 10 * 60 * 1000 ; // 10 minutes 
+    private static final Logger log = LoggerFactory.getLogger(ScoringEngine.class) ;
+    private static final long VELOCITY_WINDOW_MS = 10 * 60 * 1000 ; // 10 minutes
     private static final long GEO_WINDOW_MS = 30*60*1000 ; // 30 minutes
-    private static final int VELOCITY_THRESHOLD = 5; 
-    private static final double SPIKE_MULTIPLIER = 3.0 ; 
-    
-    private final Map<String , UserState> userStates = new ConcurrentHashMap<>() ; 
+    private static final int VELOCITY_THRESHOLD = 5;
+    private static final double SPIKE_MULTIPLIER = 3.0 ;
+    private static final Duration STATE_TTL = Duration.ofHours(24);
+    private static final String KEY_PREFIX = "user:";
+
+    @Autowired
+    private RedisTemplate<String, UserState> redisTemplate; 
 
     public ScoredTransaction score(Transaction tx){
-        UserState state = userStates.computeIfAbsent(tx.getCustomerId() ,UserState::new ) ;
+        String key = KEY_PREFIX + tx.getCustomerId() + ":state";
+        UserState state = redisTemplate.opsForValue().get(key);
+        if (state == null) {
+            state = new UserState(tx.getCustomerId());
+        }
 
         List<String> flags = new ArrayList<>() ;
         int riskScore = 0 ;
@@ -46,6 +55,9 @@ public class ScoringEngine {
 
           // Add transaction to user state AFTER checks
           state.addTransaction(tx);
+
+          // Save state back to Redis with 24-hour TTL
+          redisTemplate.opsForValue().set(key, state, STATE_TTL);
 
           // Check 4: High-Risk Merchant
           if (checkHighRiskMerchant(tx)) {
