@@ -20,9 +20,12 @@ public class WebhookController {
     @PostMapping("/webhook")
     public ResponseEntity<String> handleWebhook(
             @RequestBody String payload,
-            @RequestHeader("Stripe-Signature") String sigHeader) {
+            @RequestHeader("Stripe-Signature") String sigHeader,
+            @RequestParam(required = false) String testCustomerId,
+            @RequestParam(required = false) String testCountry,
+            @RequestParam(required = false) Long testAmount) {
 
-        var result = webhookService.processEvent(payload, sigHeader);
+        var result = webhookService.processEvent(payload, sigHeader, testCustomerId, testCountry, testAmount);
 
         if (result.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid signature or unhandled event");

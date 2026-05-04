@@ -21,35 +21,37 @@ public class ScoringEngine {
     private final Map<String , UserState> userStates = new ConcurrentHashMap<>() ; 
 
     public ScoredTransaction score(Transaction tx){
-        UserState state = userStates.computeIfAbsent(tx.getCustomerId() ,UserState::new ) ; 
-        List<String> flags = new ArrayList<>() ; 
-        int riskScore = 0 ; 
+        UserState state = userStates.computeIfAbsent(tx.getCustomerId() ,UserState::new ) ;
 
-        // Velocity check 
-        if(checkVelocity(state)){
-            flags.add("velocity") ; 
-            riskScore += 35 ; 
+        List<String> flags = new ArrayList<>() ;
+        int riskScore = 0 ;
+
+        // Velocity check (pass current tx to count it explicitly without adding to state yet)
+        if(checkVelocity(tx, state)){
+            flags.add("velocity") ;
+            riskScore += 35 ;
         }
-        
+
           // Check 2: Amount Spike
           if (checkAmountSpike(tx, state)) {
               flags.add("amountSpike");
               riskScore += 30;
           }
 
-          // Check 3: Geo Anomaly
+          // Check 3: Geo Anomaly (check BEFORE adding current tx so lastCountry is previous country)
           if (checkGeoAnomaly(tx, state)) {
               flags.add("geoAnomaly");
               riskScore += 40;
           }
+
+          // Add transaction to user state AFTER checks
+          state.addTransaction(tx);
+
           // Check 4: High-Risk Merchant
           if (checkHighRiskMerchant(tx)) {
               flags.add("highRiskMerchant");
               riskScore += 20;
           }
-
-          // Add transaction to user state for future checks
-          state.addTransaction(tx);
 
           String riskLevel = determineRiskLevel(riskScore); 
           log.info("Scored transaction: id={}, customerId={}, riskScore={}, riskLevel={}, flags={}",
@@ -70,9 +72,10 @@ public class ScoringEngine {
           );
     }
 
-    private boolean checkVelocity(UserState state) {
+    private boolean checkVelocity(Transaction currentTx, UserState state) {
         List<Transaction> recentTxs = state.getTransactionsInWindow(VELOCITY_WINDOW_MS);
-        return recentTxs.size() >= VELOCITY_THRESHOLD;
+        // Include current transaction in the count (it's not in state yet)
+        return (recentTxs.size() + 1) >= VELOCITY_THRESHOLD;
     }
 
     private boolean checkAmountSpike(Transaction tx, UserState state) {
