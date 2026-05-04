@@ -4,16 +4,23 @@ import com.fraudsense.model.Transaction;
 import java.util.* ; 
 
 public class UserState {
-       private String customerId ; 
-       private List<Transaction> recentTransactions ; 
-       private String lastCountry ; 
-       private long lastTransactionTime ;     
+       private String customerId ;
+       private List<Transaction> recentTransactions ;
+       private String lastCountry ;
+       private long lastTransactionTime ;
+
+       public UserState() {
+              this.customerId = null;
+              this.recentTransactions = new LinkedList<>();
+              this.lastCountry = null;
+              this.lastTransactionTime = 0;
+       }
 
        public UserState(String customerId) {
-        this.customerId = customerId ; 
-        this.recentTransactions = new LinkedList<>() ; 
-        this.lastCountry = null  ; 
-        this.lastTransactionTime = 0 ; 
+        this.customerId = customerId ;
+        this.recentTransactions = new LinkedList<>() ;
+        this.lastCountry = null  ;
+        this.lastTransactionTime = 0 ;
        }
 
        public void addTransaction(Transaction tx){
@@ -37,7 +44,15 @@ public class UserState {
                .orElse(0) ; 
        }
         public String getLastCountry() { return lastCountry; }
+        public void setLastCountry(String lastCountry) { this.lastCountry = lastCountry; }
+
         public long getLastTransactionTime() { return lastTransactionTime; }
+        public void setLastTransactionTime(long lastTransactionTime) { this.lastTransactionTime = lastTransactionTime; }
+
         public String getCustomerId() { return customerId; }
+        public void setCustomerId(String customerId) { this.customerId = customerId; }
+
+        public List<Transaction> getRecentTransactions() { return recentTransactions; }
+        public void setRecentTransactions(List<Transaction> recentTransactions) { this.recentTransactions = recentTransactions; }
 }
 
