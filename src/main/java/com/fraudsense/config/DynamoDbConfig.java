@@ -13,9 +13,13 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
+import software.amazon.awssdk.services.dynamodb.model.AttributeDefinition;
 import software.amazon.awssdk.services.dynamodb.model.BillingMode;
 import software.amazon.awssdk.services.dynamodb.model.CreateTableRequest;
+import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
+import software.amazon.awssdk.services.dynamodb.model.KeyType;
 import software.amazon.awssdk.services.dynamodb.model.ResourceInUseException;
+import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
 import jakarta.annotation.PostConstruct;
 
 import java.net.URI;
@@ -48,9 +52,9 @@ public class DynamoDbConfig {
     }
 
     @Bean
-    public DynamoDbEnhancedClient dynamoDbEnhancedClient(DynamoDbClient dynamoDbClient) {
+    public DynamoDbEnhancedClient dynamoDbEnhancedClient(DynamoDbClient client) {
         enhancedClient = DynamoDbEnhancedClient.builder()
-                .dynamoDbClient(dynamoDbClient)
+                .dynamoDbClient(client)
                 .build();
         return enhancedClient;
     }
@@ -63,19 +67,38 @@ public class DynamoDbConfig {
     @PostConstruct
     public void createTable() {
         try {
-            DynamoDbTable<ScoredTransaction> table = enhancedClient.table(tableName,
-                    TableSchema.fromClass(ScoredTransaction.class));
+            // Define the key schema: customerId (PK) + timestamp (SK)
+            KeySchemaElement partitionKey = KeySchemaElement.builder()
+                    .attributeName("customerId")
+                    .keyType(KeyType.HASH)
+                    .build();
 
-            // Create table with composite key: customerId (PK) + timestamp (SK)
+            KeySchemaElement sortKey = KeySchemaElement.builder()
+                    .attributeName("timestamp")
+                    .keyType(KeyType.RANGE)
+                    .build();
+
+            // Define attribute types
+            AttributeDefinition customerIdAttr = AttributeDefinition.builder()
+                    .attributeName("customerId")
+                    .attributeType(ScalarAttributeType.S)
+                    .build();
+
+            AttributeDefinition timestampAttr = AttributeDefinition.builder()
+                    .attributeName("timestamp")
+                    .attributeType(ScalarAttributeType.N)
+                    .build();
+
+            // Create table request
             CreateTableRequest createTableRequest = CreateTableRequest.builder()
                     .tableName(tableName)
-                    .keySchema(table.tableSchema().keyAttributes())
-                    .attributeDefinitions(table.tableSchema().allAttributes())
+                    .keySchema(partitionKey, sortKey)
+                    .attributeDefinitions(customerIdAttr, timestampAttr)
                     .billingMode(BillingMode.PAY_PER_REQUEST)
                     .build();
 
             dynamoDbClient.createTable(createTableRequest);
-            log.info("Created DynamoDB table: {} with PK=customerId, SK=timestamp", tableName);
+            log.info("Created DynamoDB table: {} with PK=customerId (String), SK=timestamp (Number)", tableName);
         } catch (ResourceInUseException e) {
             log.info("Table {} already exists", tableName);
         } catch (Exception e) {
