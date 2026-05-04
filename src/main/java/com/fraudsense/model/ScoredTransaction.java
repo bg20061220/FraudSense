@@ -2,8 +2,10 @@ package com.fraudsense.model;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import java.util.List ; 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+import java.util.List ;
 
+@DynamoDbBean
 public class ScoredTransaction {
     private String id ; 
     private long amount ; 
@@ -35,16 +37,39 @@ public class ScoredTransaction {
     }
 
       public String getId() { return id; }
+      public void setId(String id) { this.id = id; }
+
       public long getAmount() { return amount; }
+      public void setAmount(long amount) { this.amount = amount; }
+
       public String getCurrency() { return currency; }
+      public void setCurrency(String currency) { this.currency = currency; }
+
+      @DynamoDbPartitionKey
       public String getCustomerId() { return customerId; }
+      public void setCustomerId(String customerId) { this.customerId = customerId; }
+
       public String getStatus() { return status; }
+      public void setStatus(String status) { this.status = status; }
+
+      @DynamoDbSortKey
       public long getTimestamp() { return timestamp; }
+      public void setTimestamp(long timestamp) { this.timestamp = timestamp; }
+
       public String getMerchantCategory() { return merchantCategory; }
+      public void setMerchantCategory(String merchantCategory) { this.merchantCategory = merchantCategory; }
+
       public String getCountry() { return country; }
+      public void setCountry(String country) { this.country = country; }
+
       public int getRiskScore() { return riskScore; }
+      public void setRiskScore(int riskScore) { this.riskScore = riskScore; }
+
       public String getRiskLevel() { return riskLevel; }
+      public void setRiskLevel(String riskLevel) { this.riskLevel = riskLevel; }
+
       public List<String> getFlags() { return flags; }
+      public void setFlags(List<String> flags) { this.flags = flags; }
 
       @Override
       public String toString() {
