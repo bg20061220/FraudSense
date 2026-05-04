@@ -12,9 +12,11 @@ public class KafkaConsumerService {
 
     private static final Logger log = LoggerFactory.getLogger(KafkaConsumerService.class);
     private final ScoringEngine scoringEngine;
+    private final TransactionHistoryService historyService;
 
-    public KafkaConsumerService(ScoringEngine scoringEngine) {
+    public KafkaConsumerService(ScoringEngine scoringEngine, TransactionHistoryService historyService) {
         this.scoringEngine = scoringEngine;
+        this.historyService = historyService;
     }
 
     @KafkaListener(topics = "transactions", groupId = "fraudsense-group")
@@ -23,5 +25,7 @@ public class KafkaConsumerService {
 
         ScoredTransaction scored = scoringEngine.score(transaction);
         log.info("Scored: {}", scored);
+
+        historyService.addTransaction(scored);
     }
 }
