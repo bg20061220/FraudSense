@@ -20,12 +20,13 @@ import software.amazon.awssdk.services.dynamodb.model.KeySchemaElement;
 import software.amazon.awssdk.services.dynamodb.model.KeyType;
 import software.amazon.awssdk.services.dynamodb.model.ResourceInUseException;
 import software.amazon.awssdk.services.dynamodb.model.ScalarAttributeType;
-import jakarta.annotation.PostConstruct;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 
 import java.net.URI;
 
 @Configuration
-public class DynamoDbConfig {
+public class DynamoDbConfig implements ApplicationRunner {
     private static final Logger log = LoggerFactory.getLogger(DynamoDbConfig.class);
 
     @Value("${aws.dynamodb.endpoint:http://localhost:8000}")
@@ -64,8 +65,12 @@ public class DynamoDbConfig {
         return enhancedClient.table(tableName, TableSchema.fromClass(ScoredTransaction.class));
     }
 
-    @PostConstruct
-    public void createTable() {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        createTable();
+    }
+
+    private void createTable() {
         try {
             // Define the key schema: customerId (PK) + timestamp (SK)
             KeySchemaElement partitionKey = KeySchemaElement.builder()

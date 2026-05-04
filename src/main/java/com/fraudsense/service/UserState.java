@@ -1,8 +1,10 @@
 package com.fraudsense.service;
 
 import com.fraudsense.model.Transaction;
-import java.util.* ; 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.* ;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserState {
        private String customerId ;
        private List<Transaction> recentTransactions ;
