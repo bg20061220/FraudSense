@@ -1,0 +1,374 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.dashboard {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 0;
+}
+
+/* Header */
+.dashboard-header {
+  background: #000000;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+  border-bottom: 3px solid #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header h1 {
+  font-size: 3em;
+  margin-bottom: 10px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.dashboard-header p {
+  font-size: 1.2em;
+  opacity: 0.8;
+  font-weight: 300;
+}
+
+.pitch {
+  max-width: 900px;
+  margin: 30px auto 0;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: left;
+}
+
+.pitch-intro {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-bottom: 15px;
+  opacity: 0.95;
+}
+
+.pitch-body {
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  opacity: 0.85;
+}
+
+.pitch-tech {
+  font-size: 0.9em;
+  opacity: 0.8;
+  margin-top: 15px;
+}
+
+/* Stats Container */
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  padding: 25px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.stat-card.fraudulent {
+  border-left: 5px solid #000000;
+}
+
+.stat-card.suspicious {
+  border-left: 5px solid #333333;
+}
+
+.stat-card.total {
+  border-left: 5px solid #666666;
+}
+
+.stat-value {
+  font-size: 2.5em;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+.stat-label {
+  font-size: 0.95em;
+  color: #444444;
+  font-weight: 500;
+}
+
+/* Transactions Section */
+.transactions-section {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+}
+
+.transactions-section h2 {
+  font-size: 1.8em;
+  margin-bottom: 25px;
+  color: #000000;
+  font-weight: 600;
+}
+
+/* Table */
+.transactions-table {
+  background: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid #000000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 100px 120px 100px 100px 130px 1fr;
+  gap: 15px;
+  padding: 20px;
+  background: #f5f5f5;
+  border-bottom: 2px solid #000000;
+  font-weight: 600;
+  color: #000000;
+  font-size: 0.9em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 100px 120px 100px 100px 130px 1fr;
+  gap: 15px;
+  padding: 20px;
+  border-bottom: 1px solid #e0e0e0;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+.table-row:hover {
+  background-color: #f9f9f9;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+/* Table Columns */
+.col-time {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.time {
+  font-weight: 600;
+  color: #000000;
+  font-size: 0.95em;
+}
+
+.date {
+  font-size: 0.8em;
+  color: #666666;
+}
+
+.col-user {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.9em;
+  color: #000000;
+}
+
+.country-badge {
+  display: inline-block;
+  background: #e0e0e0;
+  color: #000000;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 600;
+  width: fit-content;
+  border: 1px solid #000000;
+}
+
+.col-merchant {
+  color: #000000;
+  font-size: 0.95em;
+}
+
+.col-amount {
+  font-weight: 600;
+  color: #000000;
+  font-size: 1em;
+}
+
+.col-risk {
+  display: flex;
+  justify-content: center;
+}
+
+.risk-score {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 700;
+  font-size: 1.1em;
+  background: #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.col-status {
+  display: flex;
+  justify-content: center;
+}
+
+.status-badge {
+  padding: 8px 14px;
+  border-radius: 4px;
+  color: white;
+  font-weight: 600;
+  font-size: 0.85em;
+  text-align: center;
+  min-width: 110px;
+  background: #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.col-flags {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.flag-badge {
+  display: inline-block;
+  background: #ffffff;
+  color: #000000;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.8em;
+  font-weight: 600;
+  border: 1px solid #000000;
+}
+
+/* Footer */
+.dashboard-footer {
+  background: #f5f5f5;
+  border-top: 2px solid #000000;
+  padding: 20px;
+  text-align: center;
+  color: #666666;
+  font-size: 0.9em;
+  margin-top: 40px;
+}
+
+.dashboard-footer p {
+  margin: 5px 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .table-header,
+  .table-row {
+    grid-template-columns: 80px 100px 120px 100px 80px 100px 1fr;
+  }
+
+  .dashboard-header h1 {
+    font-size: 2em;
+  }
+
+  .stat-card {
+    min-width: 150px;
+  }
+
+  .stat-value {
+    font-size: 2em;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-header h1 {
+    font-size: 1.8em;
+  }
+
+  .pitch {
+    padding: 20px;
+  }
+
+  .pitch-intro,
+  .pitch-body,
+  .pitch-tech {
+    font-size: 0.9em;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .table-header {
+    display: none;
+  }
+
+  .table-row {
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    position: relative;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+  }
+
+  .table-row > div::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #666666;
+    font-size: 0.85em;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  .col-flags {
+    justify-content: flex-start;
+  }
+
+  .stats-container {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}
