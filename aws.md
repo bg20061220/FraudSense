@@ -73,14 +73,15 @@ We created `fraudsense-sg` with:
 
 ---
 
-## Why Self-Hosted Kafka?
+## Why Confluent Cloud?
 
-The plan originally said **CloudKarafka**, but that service is discontinued. Alternatives:
-- **Confluent Cloud** (managed, easy, but paid)
-- **Upstash** (serverless, free tier)
-- **Self-hosted Kafka on EC2** (ops burden, but $0 cost) ← We chose this
+**Confluent Cloud** is the recommended option:
+- **Managed Kafka** (Confluent handles ops, no infrastructure overhead)
+- **Free tier available** (sufficient for learning and testing)
+- **Easy integration** with Spring Boot via SASL_SSL configuration
+- **No self-hosting burden** (unlike running Kafka on EC2)
 
-**Trade-off:** We're trading convenience for $0 cost. We'll install Kafka on the same EC2 instance as our Spring Boot app.
+This means your app on EC2 will simply connect to Confluent Cloud's hosted Kafka cluster via SASL_SSL credentials.
 
 ---
 

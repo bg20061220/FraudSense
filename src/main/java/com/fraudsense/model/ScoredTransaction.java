@@ -45,6 +45,7 @@ public class ScoredTransaction {
       public String getCurrency() { return currency; }
       public void setCurrency(String currency) { this.currency = currency; }
 
+      
       @DynamoDbPartitionKey
       public String getCustomerId() { return customerId; }
       public void setCustomerId(String customerId) { this.customerId = customerId; }
