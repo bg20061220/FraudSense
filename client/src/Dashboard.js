@@ -148,10 +148,10 @@ const Dashboard = () => {
         <h1>🚨 FraudSense Dashboard</h1>
         <div className="pitch">
           <p className="pitch-intro">
-            Hey there. If you're viewing this, you're probably deciding whether to hire me. This is a **learning project** I built to bridge specific gaps on my resume. Here's what I got out of it:
+            Hey there. If you're viewing this, you're probably deciding whether to hire me. This is a learning project I built to bridge specific gaps on my resume. Here's what I got out of it:
           </p>
           <p className="pitch-body">
-            I deliberately built a real-time fraud detection pipeline to **deeply understand** how event-driven systems work. I learned why Kafka decouples producers from consumers, allowing independent scaling and fault tolerance. I discovered that in-memory caching (Redis) is non-negotiable for sub-millisecond pattern detection. I implemented and tested a weighted anomaly scoring algorithm to understand fraud detection logic. And I deployed the entire system on AWS to learn how managed services (EC2, DynamoDB, Confluent Cloud) eliminate infrastructure headaches while scaling to production.
+            I deliberately built a real-time fraud detection pipeline to deeply understand how event-driven systems work. I learned why Kafka decouples producers from consumers, allowing independent scaling and fault tolerance. I discovered that in-memory caching (Redis) is non-negotiable for sub-millisecond pattern detection. I implemented and tested a weighted anomaly scoring algorithm to understand fraud detection logic. And I deployed the entire system on AWS to learn how managed services (EC2, DynamoDB, Confluent Cloud) eliminate infrastructure headaches while scaling to production.
           </p>
           <p className="pitch-tech">
             <strong>What I learned:</strong> Event-Driven Architecture, Kafka, Redis, DynamoDB, AWS (Serverless), Real-Time Systems, Anomaly Detection, Java Spring Boot, REST APIs, React.
