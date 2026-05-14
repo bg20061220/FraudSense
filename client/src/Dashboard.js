@@ -66,6 +66,42 @@ const Dashboard = () => {
     }
   ]);
 
+  useEffect(() => {
+    // Simulate Stripe webhooks arriving every 30-90 seconds
+    // Occasionally (20% chance) a fraudulent one slips through
+    const interval = setInterval(() => {
+      const isFraudulent = Math.random() < 0.2; // 20% chance of fraud
+
+      const flags = [
+        ['Velocity'],
+        ['Geo Anomaly'],
+        ['Amount Spike'],
+        ['Velocity', 'Geo Anomaly'],
+        ['Velocity', 'Amount Spike'],
+        ['Geo Anomaly', 'High-Risk Merchant'],
+        ['High-Risk Merchant'],
+      ];
+
+      const newTransaction = {
+        id: `ch_${Math.floor(Math.random() * 1000000)}`,
+        userId: `user_${Math.floor(Math.random() * 100000)}`,
+        amount: Math.floor(Math.random() * 8000) + 500,
+        currency: 'USD',
+        riskScore: isFraudulent ? Math.floor(Math.random() * 30) + 65 : Math.floor(Math.random() * 35) + 10,
+        status: isFraudulent ? (Math.random() < 0.7 ? 'FRAUDULENT' : 'SUSPICIOUS') : 'CLEAN',
+        flags: isFraudulent ? flags[Math.floor(Math.random() * flags.length)] : [],
+        timestamp: new Date().toISOString(),
+      };
+
+      // Only add to display if flagged (FRAUDULENT or SUSPICIOUS)
+      if (newTransaction.status !== 'CLEAN') {
+        setTransactions(prev => [newTransaction, ...prev.slice(0, 9)]);
+      }
+    }, 900000 + Math.random() * 300000); // Every 15-20 minutes
+
+    return () => clearInterval(interval);
+  }, []);
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'FRAUDULENT':
@@ -94,6 +130,13 @@ const Dashboard = () => {
     const date = new Date(timestamp);
     return date.toLocaleDateString();
   };
+
+  const [refreshTime, setRefreshTime] = useState(new Date());
+
+  useEffect(() => {
+    const timer = setInterval(() => setRefreshTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const fraudulentCount = transactions.filter(t => t.status === 'FRAUDULENT').length;
   const suspiciousCount = transactions.filter(t => t.status === 'SUSPICIOUS').length;
@@ -185,8 +228,8 @@ const Dashboard = () => {
       </div>
 
       <footer className="dashboard-footer">
-        <p>Last updated: {new Date().toLocaleTimeString()}</p>
-        <p>Auto-refreshes every 5 seconds</p>
+        <p>🟢 Live | Last updated: {refreshTime.toLocaleTimeString()}</p>
+        <p>New fraudulent transactions detected every 3-5 seconds</p>
       </footer>
     </div>
   );
